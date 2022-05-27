@@ -63,6 +63,9 @@ export default class PfMicroservice extends Construct {
       ...this.commonProps,
       environment: {
         DYNAMODB_TABLE_NAME: orderTable.tableName,
+        EVENT_BUS_NAME: 'PfEventBus',
+        EVENT_BUS_SOURCE: 'com.pf.bascket.checkoutbasket',
+        EVENT_BUS_DETAIL_TYPE: 'checkoutBasket',
       },
       entry: join(__dirname, '..', 'src', 'order', 'index.js'),
     });

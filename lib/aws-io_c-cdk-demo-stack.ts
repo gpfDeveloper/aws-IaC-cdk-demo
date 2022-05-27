@@ -1,61 +1,32 @@
-import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
-import {
-  IntegrationResponse,
-  LambdaIntegration,
-  MethodResponse,
-  RestApi,
-} from 'aws-cdk-lib/aws-apigateway';
-import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
-import {
-  NodejsFunction,
-  NodejsFunctionProps,
-} from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { join } from 'path';
 import PfApiGateway from './apigateway';
 import PfDatabase from './database';
+import PfEventBus from './eventbus';
 import PfMicroservice from './microservice';
+import PfQueue from './queue';
 
 export class AwsIoCCdkDemoStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const database = new PfDatabase(this, 'Datebase');
-    const microservice = new PfMicroservice(this, 'microservice', {
+    const database = new PfDatabase(this, 'PfDatebase');
+    const microservice = new PfMicroservice(this, 'PfMicroservice', {
       productTable: database.productTable,
       basketTable: database.basketTable,
       orderTable: database.orderTable,
     });
-    const apiGateway = new PfApiGateway(this, 'apigateway', {
+    const apiGateway = new PfApiGateway(this, 'PfApigateway', {
       productMicroservice: microservice.productMicroservice,
       basketMicroservice: microservice.basketMicroservice,
       orderMicroservice: microservice.orderMicroservice,
     });
-
-    // const apiGW = new RestApi(this, 'shoppingApi');
-    // const apiGWProd = apiGW.root.addResource('product');
-
-    // const integrationResponse: IntegrationResponse = {
-    //   statusCode: '200',
-    // };
-    // const methodResponse: MethodResponse = {
-    //   statusCode: '200',
-    // };
-
-    // const prodGetIntergration = new LambdaIntegration(prodGetFn, {
-    //   proxy: false,
-    //   integrationResponses: [integrationResponse],
-    // });
-    // apiGWProd.addMethod('GET', prodGetIntergration, {
-    //   methodResponses: [methodResponse],
-    // });
-
-    // const prodPostIntergration = new LambdaIntegration(prodPostFn, {
-    //   proxy: false,
-    //   integrationResponses: [integrationResponse],
-    // });
-    // apiGWProd.addMethod('POST', prodPostIntergration, {
-    //   methodResponses: [methodResponse],
-    // });
+    const queue = new PfQueue(this, 'PfQueue', {
+      orderQueueConsumer: microservice.orderMicroservice,
+    });
+    const eventBus = new PfEventBus(this, 'PfEventBus', {
+      basketCheckoutService: microservice.basketMicroservice,
+      orderQueue: queue.orderQueue,
+    });
   }
 }
