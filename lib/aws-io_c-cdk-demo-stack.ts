@@ -12,60 +12,50 @@ import {
 } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { join } from 'path';
+import PfApiGateway from './apigateway';
+import PfDatabase from './database';
+import PfMicroservice from './microservice';
 
 export class AwsIoCCdkDemoStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const table = new Table(this, 'ProdTable', {
-      partitionKey: { name: 'id', type: AttributeType.STRING },
-      tableName: 'ProductTable',
-      removalPolicy: RemovalPolicy.DESTROY,
+    const database = new PfDatabase(this, 'Datebase');
+    const microservice = new PfMicroservice(this, 'microservice', {
+      productTable: database.productTable,
+      basketTable: database.basketTable,
+      orderTable: database.orderTable,
+    });
+    const apiGateway = new PfApiGateway(this, 'apigateway', {
+      productMicroservice: microservice.productMicroservice,
+      basketMicroservice: microservice.basketMicroservice,
+      orderMicroservice: microservice.orderMicroservice,
     });
 
-    const funcProps: NodejsFunctionProps = {
-      bundling: {
-        externalModules: ['aws-sdk'],
-      },
-    };
+    // const apiGW = new RestApi(this, 'shoppingApi');
+    // const apiGWProd = apiGW.root.addResource('product');
 
-    const prodGetFn = new NodejsFunction(this, 'prodGetFn', {
-      ...funcProps,
-      entry: join(__dirname, '..', 'src', 'product', 'get.js'),
-    });
+    // const integrationResponse: IntegrationResponse = {
+    //   statusCode: '200',
+    // };
+    // const methodResponse: MethodResponse = {
+    //   statusCode: '200',
+    // };
 
-    const prodPostFn = new NodejsFunction(this, 'prodPostFn', {
-      ...funcProps,
-      entry: join(__dirname, '..', 'src', 'product', 'post.js'),
-    });
+    // const prodGetIntergration = new LambdaIntegration(prodGetFn, {
+    //   proxy: false,
+    //   integrationResponses: [integrationResponse],
+    // });
+    // apiGWProd.addMethod('GET', prodGetIntergration, {
+    //   methodResponses: [methodResponse],
+    // });
 
-    table.grantReadWriteData(prodGetFn);
-    table.grantReadWriteData(prodPostFn);
-
-    const apiGW = new RestApi(this, 'shoppingApi');
-    const apiGWProd = apiGW.root.addResource('product');
-
-    const integrationResponse: IntegrationResponse = {
-      statusCode: '200',
-    };
-    const methodResponse: MethodResponse = {
-      statusCode: '200',
-    };
-
-    const prodGetIntergration = new LambdaIntegration(prodGetFn, {
-      proxy: false,
-      integrationResponses: [integrationResponse],
-    });
-    apiGWProd.addMethod('GET', prodGetIntergration, {
-      methodResponses: [methodResponse],
-    });
-
-    const prodPostIntergration = new LambdaIntegration(prodPostFn, {
-      proxy: false,
-      integrationResponses: [integrationResponse],
-    });
-    apiGWProd.addMethod('POST', prodPostIntergration, {
-      methodResponses: [methodResponse],
-    });
+    // const prodPostIntergration = new LambdaIntegration(prodPostFn, {
+    //   proxy: false,
+    //   integrationResponses: [integrationResponse],
+    // });
+    // apiGWProd.addMethod('POST', prodPostIntergration, {
+    //   methodResponses: [methodResponse],
+    // });
   }
 }
