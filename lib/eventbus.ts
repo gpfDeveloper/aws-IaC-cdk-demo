@@ -5,7 +5,7 @@ import { IQueue } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
 
 interface PfEventBusProps {
-  basketCheckoutService: IFunction;
+  basketService: IFunction;
   orderQueue: IQueue;
 }
 
@@ -17,8 +17,8 @@ export default class PfEventBus extends Construct {
     this.eventBus = new EventBus(this, 'PfEventBus', {
       eventBusName: 'PfEventBus',
     });
-    this.eventBus.grantPutEventsTo(props.basketCheckoutService);
     this.createBasketCheckoutEventRule(props.orderQueue);
+    this.eventBus.grantPutEventsTo(props.basketService);
   }
 
   private createBasketCheckoutEventRule(orderQueue: IQueue): void {

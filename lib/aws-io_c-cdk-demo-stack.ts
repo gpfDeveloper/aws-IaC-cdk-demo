@@ -25,7 +25,7 @@ export class AwsIoCCdkDemoStack extends Stack {
       orderQueueConsumer: microservice.orderMicroservice,
     });
     const eventBus = new PfEventBus(this, 'PfEventBus', {
-      basketCheckoutService: microservice.basketMicroservice,
+      basketService: microservice.basketMicroservice,
       orderQueue: queue.orderQueue,
     });
   }

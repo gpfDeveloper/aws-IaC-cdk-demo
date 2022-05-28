@@ -35,7 +35,7 @@ export default class PfMicroservice extends Construct {
   }
 
   private createProductMicroservice(productTable: ITable): NodejsFunction {
-    const fn = new NodejsFunction(this, 'productLambdaFn', {
+    const fn = new NodejsFunction(this, 'ProductLambdaFn', {
       ...this.commonProps,
       environment: {
         DYNAMODB_TABLE_NAME: productTable.tableName,
@@ -47,10 +47,13 @@ export default class PfMicroservice extends Construct {
   }
 
   private createBasketMicroservice(basketTable: ITable): NodejsFunction {
-    const fn = new NodejsFunction(this, 'basketLambdaFn', {
+    const fn = new NodejsFunction(this, 'BasketLambdaFn', {
       ...this.commonProps,
       environment: {
         DYNAMODB_TABLE_NAME: basketTable.tableName,
+        EVENT_BUS_NAME: 'PfEventBus',
+        EVENT_BUS_SOURCE: 'com.pf.bascket.checkoutbasket',
+        EVENT_BUS_DETAIL_TYPE: 'checkoutBasket',
       },
       entry: join(__dirname, '..', 'src', 'basket', 'index.js'),
     });
@@ -59,13 +62,10 @@ export default class PfMicroservice extends Construct {
   }
 
   private createOrderMicroservice(orderTable: ITable): NodejsFunction {
-    const fn = new NodejsFunction(this, 'orderLambdaFn', {
+    const fn = new NodejsFunction(this, 'OrderLambdaFn', {
       ...this.commonProps,
       environment: {
         DYNAMODB_TABLE_NAME: orderTable.tableName,
-        EVENT_BUS_NAME: 'PfEventBus',
-        EVENT_BUS_SOURCE: 'com.pf.bascket.checkoutbasket',
-        EVENT_BUS_DETAIL_TYPE: 'checkoutBasket',
       },
       entry: join(__dirname, '..', 'src', 'order', 'index.js'),
     });

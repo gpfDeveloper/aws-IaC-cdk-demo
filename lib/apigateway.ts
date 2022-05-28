@@ -17,7 +17,7 @@ export default class PfApiGateway extends Construct {
   }
 
   private createProductApi(productMicroservice: IFunction): void {
-    const api = new LambdaRestApi(this, 'productApi', {
+    const api = new LambdaRestApi(this, 'product', {
       handler: productMicroservice,
       proxy: false,
     });

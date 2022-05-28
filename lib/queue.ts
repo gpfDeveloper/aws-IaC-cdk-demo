@@ -15,7 +15,7 @@ export default class PfQueue extends Construct {
   }
 
   private createOrderQueue(orderQueueConsumer: IFunction): IQueue {
-    const queue = new Queue(this, 'orderQueue');
+    const queue = new Queue(this, 'OrderQueue');
     orderQueueConsumer.addEventSource(
       new SqsEventSource(queue, { batchSize: 1 })
     );
