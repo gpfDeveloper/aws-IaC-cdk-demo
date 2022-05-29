@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import ddbClient from './ddbClient';
 
 exports.handler = async (event) => {
-  console.log('request:', event);
+  console.log('request event: ', event);
   let data;
   try {
     switch (event.httpMethod) {

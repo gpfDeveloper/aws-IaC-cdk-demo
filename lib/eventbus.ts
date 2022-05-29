@@ -17,8 +17,8 @@ export default class PfEventBus extends Construct {
     this.eventBus = new EventBus(this, 'PfEventBus', {
       eventBusName: 'PfEventBus',
     });
-    this.createBasketCheckoutEventRule(props.orderQueue);
     this.eventBus.grantPutEventsTo(props.basketService);
+    this.createBasketCheckoutEventRule(props.orderQueue);
   }
 
   private createBasketCheckoutEventRule(orderQueue: IQueue): void {

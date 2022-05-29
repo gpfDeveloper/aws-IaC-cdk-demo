@@ -1,0 +1,17 @@
+{
+  "name": "basket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "PengfeiGao",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.100.0",
+    "@aws-sdk/client-eventbridge": "^3.100.0",
+    "@aws-sdk/util-dynamodb": "^3.100.0"
+  }
+}
