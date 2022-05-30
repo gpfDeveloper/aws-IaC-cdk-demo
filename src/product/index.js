@@ -70,7 +70,7 @@ const getAllProducts = async () => {
     console.log(Items);
     return Items ? Items.map((item) => unmarshall(item)) : [];
   } catch (err) {
-    console.error(e);
+    console.error(err);
     throw err;
   }
 };
@@ -105,7 +105,7 @@ const getProduct = async (id) => {
     console.log(Item);
     return Item ? unmarshall(Item) : {};
   } catch (err) {
-    console.error(e);
+    console.error(err);
     throw err;
   }
 };
@@ -120,7 +120,7 @@ const createProduct = async (payload) => {
     const result = await ddbClient.send(new PutItemCommand(params));
     console.log('create result: ', result);
   } catch (err) {
-    console.error(e);
+    console.error(err);
     throw err;
   }
 };
@@ -156,7 +156,7 @@ const updateProduct = async (id, payload) => {
     console.log('update result: ', result);
     return result;
   } catch (err) {
-    console.error(e);
+    console.error(err);
     throw err;
   }
 };
@@ -172,7 +172,7 @@ const deleteProduct = async (id) => {
     console.log('delete result: ', result);
     return result;
   } catch (err) {
-    console.error(e);
+    console.error(err);
     throw err;
   }
 };

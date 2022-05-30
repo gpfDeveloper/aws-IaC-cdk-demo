@@ -1,0 +1,5 @@
+{
+  "ProductLambdaFn": {
+    "DYNAMODB_TABLE_NAME": "Product"
+  }
+}
