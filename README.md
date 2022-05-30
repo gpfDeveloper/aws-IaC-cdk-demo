@@ -13,6 +13,7 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 - `cdk diff` compare deployed stack with current state
 - `cdk synth` emits the synthesized CloudFormation template
 
-## Test with SAM cmd
+## Test with SAM commands
 
-sam local invoke -t cdk.out/AwsIoCCdkDemoStack.template.json "ProductLambdaFn" -e test-lambda-events/api-gateway-product-get.json --env-vars test-env-vars/product.json
+- **Invoke lambda locally** `sam local invoke -t cdk.out/AwsIoCCdkDemoStack.template.json "ProductLambdaFn" -e test/events/api-gateway-product-getAll.json --env-vars test/env.json`
+- **Local Api Endpoint** `sam local start-api -t cdk.out/AwsIoCCdkDemoStack.template.json --env-vars test/env.json`
